@@ -1,0 +1,40 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  c:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install the ARM toolchain
+        run: sudo apt-get update && sudo apt-get install -y gcc-arm-none-eabi libnewlib-arm-none-eabi
+      - name: Unit tests of the C controller (gcc, warnings as errors)
+        run: make -C c test
+      - name: Same with clang
+        run: make -C c clean test CC=clang
+      - name: Cortex-M4F build and code size
+        run: make -C c arm
+
+  python:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.12"]
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install the package
+        run: pip install -e ".[dev]"
+      - name: Run the tests (including the C code against the Python reference)
+        run: pytest -v
+      - name: Run the examples
+        run: |
+          python examples/foc_speed_control.py
+          python examples/six_step_vs_foc.py
+          python examples/non_idealities.py
+          python examples/back_to_back.py

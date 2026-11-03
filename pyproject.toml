@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bldc-control-sim"
+version = "0.1.0"
+description = "BLDC / PMSM drive simulation with FOC and six-step control laws, and their embedded C implementation tested in the loop."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Mehdi Belhaj" }]
+keywords = ["BLDC", "PMSM", "FOC", "field-oriented control", "six-step", "motor control", "SVPWM", "dead time", "software-in-the-loop", "embedded C"]
+dependencies = ["numpy>=1.24", "scipy>=1.10", "matplotlib>=3.7"]
+
+[project.optional-dependencies]
+dev = ["pytest>=7"]
+
+[project.urls]
+Homepage = "https://mehdi-belhaj-eea.github.io"
+
+[tool.setuptools.packages.find]
+include = ["bldc*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
